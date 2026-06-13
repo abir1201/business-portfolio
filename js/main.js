@@ -246,11 +246,15 @@ function renderGallery(gallery) {
   window._gallery = gallery;
   grid.innerHTML = gallery.map((img, i) => `
     <div class="gallery-item" data-index="${i}">
-      <img src="${img.src}" alt="${img.caption || ''}">
+      <img src="${img.src}" alt="${img.title || img.caption || ''}">
       <div class="gallery-overlay">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
       </div>
-      ${img.caption ? `<div class="gallery-caption">${img.caption}</div>` : ''}
+      ${(img.title || img.caption) ? `
+        <div class="gallery-caption">
+          ${img.title ? `<strong>${img.title}</strong>` : ''}
+          ${img.description ? `<span>${img.description}</span>` : (img.caption && !img.title ? `<span>${img.caption}</span>` : '')}
+        </div>` : ''}
     </div>
   `).join('');
   attachGalleryClicks();
@@ -566,7 +570,9 @@ function initGalleryLightbox() {
     if (!gallery.length) return;
     current = i;
     img.src = gallery[i].src;
-    cap.textContent = gallery[i].caption || '';
+    const titleEl = document.getElementById('lightbox-title');
+    if (titleEl) titleEl.textContent = gallery[i].title || gallery[i].caption || '';
+    cap.textContent = gallery[i].description || (gallery[i].title ? '' : gallery[i].caption || '');
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
   }

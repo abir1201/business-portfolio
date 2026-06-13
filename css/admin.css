@@ -410,6 +410,12 @@ input,textarea,select{font-family:inherit}
   opacity:0;transition:var(--t);padding:.5rem;
 }
 .gallery-admin-caption{font-size:.72rem;color:#fff;text-align:center;word-break:break-word}
+.gallery-admin-title{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.75));
+  padding:.4rem .5rem;font-size:.72rem;color:#fff;
+  font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 
 /* ============================================================
    TECH TAGS ADMIN

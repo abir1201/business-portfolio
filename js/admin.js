@@ -29,9 +29,10 @@ function showLogin() {
   document.getElementById('admin-app').classList.remove('active');
 }
 
-function showApp() {
+async function showApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-app').classList.add('active');
+  await DB.fetchRemote();
   loadTab('dashboard');
 }
 
@@ -994,11 +995,16 @@ function renderGalleryTab(el) {
     <div class="gallery-admin-grid" id="gallery-admin-grid">
       ${(d.gallery || []).map((img, i) => `
         <div class="gallery-admin-item">
-          <img src="${img.src}" alt="${img.caption || ''}">
+          <img src="${img.src}" alt="${esc(img.title || img.caption || '')}">
           <div class="gallery-admin-overlay">
-            <div class="gallery-admin-caption">${esc(img.caption || '')}</div>
-            <button class="adm-btn adm-btn-danger" style="font-size:.75rem;padding:.3rem .6rem" onclick="deleteGalleryItem(${i})">Delete</button>
+            <div class="gallery-admin-caption">${esc(img.title || img.caption || 'No title')}</div>
+            ${img.description ? `<div class="gallery-admin-caption" style="font-size:.68rem;opacity:.8">${esc(img.description)}</div>` : ''}
+            <div style="display:flex;gap:.4rem;margin-top:.4rem">
+              <button class="adm-btn" style="font-size:.72rem;padding:.25rem .5rem" onclick="editGalleryItem(${i})">Edit</button>
+              <button class="adm-btn adm-btn-danger" style="font-size:.72rem;padding:.25rem .5rem" onclick="deleteGalleryItem(${i})">Delete</button>
+            </div>
           </div>
+          ${img.title ? `<div class="gallery-admin-title">${esc(img.title)}</div>` : ''}
         </div>
       `).join('') || ''}
     </div>
@@ -1014,6 +1020,46 @@ function renderGalleryTab(el) {
   input.addEventListener('change', e => handleGalleryFiles(e.target.files));
 }
 
+function promptGalleryInfo(filename, existingTitle = '', existingDesc = '') {
+  return new Promise(resolve => {
+    const modal = document.createElement('div');
+    modal.className = 'adm-modal-overlay open';
+    modal.style.cssText = 'z-index:9999';
+    modal.innerHTML = `
+      <div class="adm-modal">
+        <div class="adm-modal-header">
+          <h3>Image Details</h3>
+          <button class="adm-modal-close" id="ginfo-close">✕</button>
+        </div>
+        <div class="adm-modal-body">
+          <p style="color:var(--text3);font-size:.82rem;margin-bottom:1rem;word-break:break-all">${esc(filename)}</p>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="ginfo-title" value="${esc(existingTitle)}" placeholder="যেমন: ব্যবসার মিটিং, প্রজেক্ট শো...">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="ginfo-desc" rows="3" placeholder="Image সম্পর্কে বিস্তারিত লিখুন (optional)">${esc(existingDesc)}</textarea>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;justify-content:flex-end;padding:1rem 1.5rem;border-top:1px solid var(--border)">
+          <button class="adm-btn" id="ginfo-skip">Skip</button>
+          <button class="adm-btn adm-btn-primary" id="ginfo-save">Save</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    const cleanup = result => { modal.remove(); resolve(result); };
+    document.getElementById('ginfo-save').addEventListener('click', () => {
+      cleanup({
+        title: document.getElementById('ginfo-title').value.trim(),
+        description: document.getElementById('ginfo-desc').value.trim()
+      });
+    });
+    document.getElementById('ginfo-skip').addEventListener('click', () => cleanup({ title: existingTitle, description: existingDesc }));
+    document.getElementById('ginfo-close').addEventListener('click', () => cleanup({ title: existingTitle, description: existingDesc }));
+  });
+}
+
 async function handleGalleryFiles(files) {
   const filesArr = Array.from(files);
   const d = DB.get();
@@ -1022,8 +1068,8 @@ async function handleGalleryFiles(files) {
   for (const file of filesArr) {
     const url = await uploadToImgBB(file);
     if (url) {
-      const caption = prompt(`Caption for "${file.name}" (optional):`) || '';
-      d.gallery.push({ src: url, caption });
+      const { title, description } = await promptGalleryInfo(file.name);
+      d.gallery.push({ src: url, title, description });
       uploaded++;
     }
   }
@@ -1033,6 +1079,16 @@ async function handleGalleryFiles(files) {
     renderGalleryTab(document.getElementById('adm-content'));
   }
 }
+
+window.editGalleryItem = async function(index) {
+  const d = DB.get();
+  const img = d.gallery[index];
+  const { title, description } = await promptGalleryInfo(img.src.split('/').pop(), img.title || img.caption || '', img.description || '');
+  d.gallery[index] = { ...img, title, description };
+  DB.save(d);
+  toast('Updated!');
+  renderGalleryTab(document.getElementById('adm-content'));
+};
 
 window.deleteGalleryItem = function(index) {
   confirm('Delete this image?', () => {
