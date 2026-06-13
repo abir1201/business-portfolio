@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional portfolio of a CIS student at Daffodil International University — Web Developer & Export-Import Business Owner.">
+  <title>Portfolio — CIS Student & Web Developer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-ring"></div>
+    <div class="loader-text">Loading Portfolio...</div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot"     id="cursor-dot"></div>
+  <div class="cursor-outline" id="cursor-outline"></div>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <!-- Navigation Dots (right side) -->
+  <nav class="nav-dots" id="nav-dots"></nav>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="#home" class="logo-text">Port<span class="accent">folio</span></a>
+      </div>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#home"      class="nav-link active">Home</a></li>
+        <li><a href="#about"     class="nav-link">About</a></li>
+        <li><a href="#education" class="nav-link">Education</a></li>
+        <li><a href="#skills"    class="nav-link">Skills</a></li>
+        <li><a href="#projects"  class="nav-link">Projects</a></li>
+        <li><a href="#business"  class="nav-link">Business</a></li>
+        <li><a href="#gallery"   class="nav-link">Gallery</a></li>
+        <li><a href="#contact"   class="nav-link">Contact</a></li>
+        <!-- <li><a href="admin.html" class="nav-link admin-link">⚙ Admin</a></li> -->
+      </ul>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <section id="home" class="hero">
+    <canvas id="particles-canvas"></canvas>
+    <div class="aurora">
+      <div class="aurora-1"></div>
+      <div class="aurora-2"></div>
+      <div class="aurora-3"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Available for Work &amp; Collaboration</span>
+      </div>
+
+      <h1 class="hero-name" id="hero-name">Your Full Name</h1>
+
+      <div class="hero-titles">
+        <span class="static-text">I am a&nbsp;</span>
+        <span class="dynamic-text" id="typewriter"></span>
+        <span class="cursor-blink">|</span>
+      </div>
+
+      <p class="hero-desc" id="hero-desc">
+        CIS Student at Daffodil International University &nbsp;•&nbsp; Web Developer &nbsp;•&nbsp; Export-Import Business Owner
+      </p>
+
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">
+          <span>Get In Touch</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#" class="btn btn-secondary" id="cv-download-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          <span>Download CV</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" data-count="3">0</span><span>+</span>
+          <span class="stat-label">Years Coding</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="20">0</span><span>+</span>
+          <span class="stat-label">Projects Done</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="1">0</span><span></span>
+          <span class="stat-label">Trade License</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-indicator">
+        <span>Scroll Down</span>
+        <div class="scroll-arrow">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT SECTION
+       ============================================================ -->
+  <section id="about" class="section about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Who I Am</span>
+        <h2 class="section-title">About <span class="gradient-text">Me</span></h2>
+        <p class="section-desc">A passionate technologist blending academic excellence with real-world business acumen</p>
+      </div>
+
+      <div class="about-grid">
+        <!-- Image Column -->
+        <div class="about-image-wrap reveal-left">
+          <div class="profile-ring-wrap">
+            <div class="about-image" id="about-image-container">
+              <div class="image-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="about-decorations">
+            <div class="deco-card deco-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              <span>DIU Student</span>
+            </div>
+            <div class="deco-card deco-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <span>Web Developer</span>
+            </div>
+            <div class="deco-card deco-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Business Owner</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Column -->
+        <div class="about-content reveal-right">
+          <h3 class="about-greeting">Hello! I'm <span class="gradient-text" id="about-name">Your Name</span></h3>
+          <p class="about-bio" id="about-bio">
+            I am a passionate Computer and Information Systems (CIS) student at Daffodil International University,
+            combining academic excellence with entrepreneurial spirit.
+          </p>
+
+          <div class="about-info-grid">
+            <div class="info-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <div>
+                <span class="info-label">Full Name</span>
+                <span class="info-value" id="info-name">Your Full Name</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.5 1.18 2 2 0 012.5.01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006 6l.91-.91a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15.92z"/></svg>
+              <div>
+                <span class="info-label">Phone</span>
+                <span class="info-value" id="info-phone">+880 XXXXXXXXXX</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div>
+                <span class="info-label">Email</span>
+                <span class="info-value" id="info-email">251-16-004@diu.edu.bd</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div>
+                <span class="info-label">Location</span>
+                <span class="info-value" id="info-location">Dhaka, Bangladesh</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-actions">
+            <a href="#contact" class="btn btn-primary">Hire Me</a>
+            <a href="#"        class="btn btn-outline" id="cv-btn">View CV</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EDUCATION SECTION
+       ============================================================ -->
+  <section id="education" class="section education" style="position:relative">
+    <span class="section-number">02</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Academic Journey</span>
+        <h2 class="section-title">My <span class="gradient-text">Education</span></h2>
+        <p class="section-desc">Building a strong foundation at one of Bangladesh's premier universities</p>
+      </div>
+      <div class="timeline" id="education-timeline">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS SECTION
+       ============================================================ -->
+  <section id="skills" class="section skills" style="position:relative">
+    <span class="section-number">03</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">What I Know</span>
+        <h2 class="section-title">My <span class="gradient-text">Skills</span></h2>
+        <p class="section-desc">Constantly learning and mastering new technologies</p>
+      </div>
+      <div class="skills-container">
+        <div class="skills-bars" id="skills-bars"><!-- dynamic --></div>
+        <div class="tech-stack reveal">
+          <h3>Technologies &amp; Tools</h3>
+          <div class="tech-grid" id="tech-grid"><!-- dynamic --></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECTS SECTION
+       ============================================================ -->
+  <section id="projects" class="section projects" style="position:relative">
+    <span class="section-number">04</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">My Work</span>
+        <h2 class="section-title">Featured <span class="gradient-text">Projects</span></h2>
+        <p class="section-desc">A selection of work that showcases my skills and creativity</p>
+      </div>
+      <div class="projects-filter" id="projects-filter">
+        <button class="filter-btn active" data-filter="all">All</button>
+      </div>
+      <div class="projects-grid" id="projects-grid"><!-- dynamic --></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BUSINESS SECTION
+       ============================================================ -->
+  <section id="business" class="section business" style="position:relative">
+    <span class="section-number">05</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Commerce &amp; Trade</span>
+        <h2 class="section-title">My <span class="gradient-text">Business</span></h2>
+        <p class="section-desc">Licensed export-import business connecting markets across borders</p>
+      </div>
+      <div id="business-content"><!-- dynamic --></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       RESUME / CV SECTION
+       ============================================================ -->
+  <section id="resume" class="section resume" style="position:relative">
+    <span class="section-number">06</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">My Resume</span>
+        <h2 class="section-title">Curriculum <span class="gradient-text">Vitae</span></h2>
+        <p class="section-desc">A summary of my professional journey and accomplishments</p>
+      </div>
+
+      <div class="resume-content">
+        <div class="resume-grid">
+          <div class="resume-col">
+            <h3 class="resume-col-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              Work Experience
+            </h3>
+            <div id="experience-list"><!-- dynamic --></div>
+          </div>
+          <div class="resume-col">
+            <h3 class="resume-col-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Achievements
+            </h3>
+            <div id="achievements-list"><!-- dynamic --></div>
+          </div>
+        </div>
+
+        <div class="resume-download reveal">
+          <p>Download my complete CV for a detailed overview of my qualifications, skills, and experience</p>
+          <a href="#" class="btn btn-primary btn-lg" id="download-cv">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download Full CV
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALLERY SECTION
+       ============================================================ -->
+  <section id="gallery" class="section gallery" style="position:relative">
+    <span class="section-number">07</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Visual Story</span>
+        <h2 class="section-title">My <span class="gradient-text">Gallery</span></h2>
+        <p class="section-desc">Moments, milestones, and memories captured in frames</p>
+      </div>
+      <div class="gallery-grid" id="gallery-grid"><!-- dynamic --></div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">✕</button>
+    <button class="lightbox-prev"  id="lightbox-prev">‹</button>
+    <button class="lightbox-next"  id="lightbox-next">›</button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="Gallery Image">
+      <p  id="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CONTACT SECTION
+       ============================================================ -->
+  <section id="contact" class="section contact" style="position:relative">
+    <span class="section-number">08</span>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Get In Touch</span>
+        <h2 class="section-title">Contact <span class="gradient-text">Me</span></h2>
+        <p class="section-desc">Have a project, business proposal, or just want to say hello?</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Info -->
+        <div class="contact-info reveal-left">
+          <h3>Let's Work Together</h3>
+          <p>Whether it's a web project, business collaboration, or academic networking — I'm always open to new opportunities and conversations.</p>
+
+          <div class="contact-items">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">Email</span>
+                <span class="contact-value" id="contact-email">251-16-004@diu.edu.bd</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.5 1.18 2 2 0 012.5.01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006 6l.91-.91a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15.92z"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">Phone</span>
+                <span class="contact-value" id="contact-phone">+880 XXXXXXXXXX</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">Location</span>
+                <span class="contact-value" id="contact-location">Dhaka, Bangladesh</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="social-links"></div>
+        </div>
+
+        <!-- Form -->
+        <div class="contact-form-wrap reveal-right">
+          <form class="contact-form" id="contact-form" novalidate>
+            <div class="form-group">
+              <input type="text"  id="msg-name"    placeholder="Your Name"  required>
+              <label for="msg-name">Your Name</label>
+            </div>
+            <div class="form-group">
+              <input type="email" id="msg-email"   placeholder="Your Email" required>
+              <label for="msg-email">Your Email</label>
+            </div>
+            <div class="form-group">
+              <input type="text"  id="msg-subject" placeholder="Subject">
+              <label for="msg-subject">Subject</label>
+            </div>
+            <div class="form-group">
+              <textarea id="msg-message" placeholder="Your Message" rows="5" required></textarea>
+              <label for="msg-message">Your Message</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              <span>Send Message</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+            <div class="form-status" id="form-status"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="logo-text">Port<span class="accent">folio</span></span>
+          <p>Building tomorrow's web, today.<br>Made with passion in Bangladesh 🇧🇩</p>
+        </div>
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#business">Business</a>
+          <a href="#contact">Contact</a>
+          <a href="admin.html">Admin Panel</a>
+        </div>
+        <div id="footer-social"></div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> <span id="footer-name">Your Name</span>. All rights reserved.</p>
+        <p>CIS Student · Web Developer · Entrepreneur</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <div class="toast-content">
+      <span class="toast-icon">✓</span>
+      <span class="toast-msg" id="toast-msg">Message sent!</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
