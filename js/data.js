@@ -151,8 +151,6 @@ const DB = {
     return d;
   },
 
-  save(data) { localStorage.setItem(this._key, JSON.stringify(data)); },
-
   update(section, value) {
     const d = this.get();
     d[section] = value;
@@ -195,5 +193,33 @@ const DB = {
   },
 
   getImgBBKey() { return localStorage.getItem('portfolio_imgbb_key') || ''; },
-  setImgBBKey(key) { localStorage.setItem('portfolio_imgbb_key', key.trim()); }
+  setImgBBKey(key) { localStorage.setItem('portfolio_imgbb_key', key.trim()); },
+
+  /* ---- Firebase Realtime Database sync ---- */
+  _fbUrl: 'https://abirakanda-6a044-default-rtdb.firebaseio.com/portfolio.json',
+
+  async fetchRemote() {
+    try {
+      const res = await fetch(this._fbUrl);
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data) { localStorage.setItem(this._key, JSON.stringify(data)); return data; }
+    } catch {}
+    return null;
+  },
+
+  async pushRemote(data) {
+    try {
+      await fetch(this._fbUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch {}
+  },
+
+  save(data) {
+    localStorage.setItem(this._key, JSON.stringify(data));
+    this.pushRemote(data);
+  }
 };

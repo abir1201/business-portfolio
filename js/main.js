@@ -2,13 +2,16 @@
    main.js — Portfolio Main Page Logic
    ============================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-  const data = DB.get();
+document.addEventListener('DOMContentLoaded', async () => {
   initPreloader();
   initCursor();
   initScrollProgress();
   initNav();
   initNavDots();
+
+  const remoteData = await DB.fetchRemote();
+  const data = remoteData || DB.get();
+
   renderAll(data);
   initParticles();
   initTypewriter();
