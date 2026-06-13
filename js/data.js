@@ -192,5 +192,8 @@ const DB = {
     const d = this.get();
     d.adminPassword = btoa(newPass);
     this.save(d);
-  }
+  },
+
+  getImgBBKey() { return localStorage.getItem('portfolio_imgbb_key') || ''; },
+  setImgBBKey(key) { localStorage.setItem('portfolio_imgbb_key', key.trim()); }
 };

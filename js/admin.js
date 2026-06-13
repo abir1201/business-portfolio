@@ -262,16 +262,18 @@ function renderProfileTab(el) {
     </div>
   `;
 
-  document.getElementById('avatar-file')?.addEventListener('change', e => {
+  document.getElementById('avatar-file')?.addEventListener('change', async e => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const prev = document.getElementById('avatar-preview');
-      prev.innerHTML = `<img id="avatar-img" src="${ev.target.result}">`;
-      prev.dataset.imgdata = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    const prev = document.getElementById('avatar-preview');
+    prev.innerHTML = `<div style="color:var(--text3);font-size:.85rem;display:flex;align-items:center;justify-content:center;height:100%">Uploading...</div>`;
+    const url = await uploadToImgBB(file);
+    if (url) {
+      prev.innerHTML = `<img id="avatar-img" src="${url}">`;
+      prev.dataset.imgdata = url;
+    } else {
+      prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>`;
+    }
   });
 
   document.getElementById('profile-form')?.addEventListener('submit', e => {
@@ -672,16 +674,18 @@ function renderProjectsTab(el) {
     </div>
   `;
 
-  document.getElementById('proj-img-file')?.addEventListener('change', e => {
+  document.getElementById('proj-img-file')?.addEventListener('change', async e => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const prev = document.getElementById('proj-img-preview');
-      prev.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover">`;
-      prev.dataset.imgdata = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    const prev = document.getElementById('proj-img-preview');
+    prev.innerHTML = `<div style="color:var(--text3);font-size:.85rem;display:flex;align-items:center;justify-content:center;height:100%">Uploading...</div>`;
+    const url = await uploadToImgBB(file);
+    if (url) {
+      prev.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+      prev.dataset.imgdata = url;
+    } else {
+      prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+    }
   });
 }
 
@@ -1010,23 +1014,24 @@ function renderGalleryTab(el) {
   input.addEventListener('change', e => handleGalleryFiles(e.target.files));
 }
 
-function handleGalleryFiles(files) {
+async function handleGalleryFiles(files) {
+  const filesArr = Array.from(files);
   const d = DB.get();
-  let loaded = 0;
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = ev => {
+  let uploaded = 0;
+  toast(`${filesArr.length}টি image upload হচ্ছে...`, 'info');
+  for (const file of filesArr) {
+    const url = await uploadToImgBB(file);
+    if (url) {
       const caption = prompt(`Caption for "${file.name}" (optional):`) || '';
-      d.gallery.push({ src: ev.target.result, caption });
-      loaded++;
-      if (loaded === files.length) {
-        DB.save(d);
-        toast(`${files.length} image(s) uploaded!`);
-        renderGalleryTab(document.getElementById('adm-content'));
-      }
-    };
-    reader.readAsDataURL(file);
-  });
+      d.gallery.push({ src: url, caption });
+      uploaded++;
+    }
+  }
+  if (uploaded > 0) {
+    DB.save(d);
+    toast(`${uploaded}টি image uploaded!`);
+    renderGalleryTab(document.getElementById('adm-content'));
+  }
 }
 
 window.deleteGalleryItem = function(index) {
@@ -1206,6 +1211,27 @@ function renderSettingsTab(el) {
     </div>
 
     <div class="dash-card" style="max-width:500px;margin-top:1.5rem">
+      <div class="dash-card-header"><h3>Image Hosting — ImgBB</h3></div>
+      <div class="dash-card-body">
+        <p style="font-size:.82rem;color:var(--text3);margin-bottom:1rem;line-height:1.6">
+          Profile photo, gallery ও project-এর images যেন সবাই দেখতে পারে সেজন্য <strong style="color:var(--primary-l)">ImgBB</strong> ব্যবহার করা হয়।<br>
+          Free API key নিন: <a href="https://api.imgbb.com/" target="_blank" rel="noopener" style="color:var(--primary-l);text-decoration:underline">api.imgbb.com</a>
+          → Sign up → API → Copy key
+        </p>
+        <form id="imgbb-form">
+          <div class="adm-form-group">
+            <label>ImgBB API Key</label>
+            <input type="text" name="imgbbKey" value="${esc(DB.getImgBBKey())}" placeholder="এখানে আপনার API key paste করুন">
+          </div>
+          <div class="adm-form-actions">
+            <button type="submit" class="adm-btn adm-btn-primary">Save API Key</button>
+          </div>
+        </form>
+        ${DB.getImgBBKey() ? '<p style="font-size:.8rem;color:var(--success);margin-top:.5rem">✓ API key সেট আছে — image upload কাজ করবে</p>' : '<p style="font-size:.8rem;color:var(--danger);margin-top:.5rem">⚠ API key নেই — image upload কাজ করবে না</p>'}
+      </div>
+    </div>
+
+    <div class="dash-card" style="max-width:500px;margin-top:1.5rem">
       <div class="dash-card-header"><h3>Data Management</h3></div>
       <div class="dash-card-body" style="display:flex;gap:1rem;flex-wrap:wrap">
         <button class="adm-btn adm-btn-secondary" onclick="exportData()">
@@ -1240,6 +1266,15 @@ function renderSettingsTab(el) {
     DB.changePassword(newpwd);
     msg.style.color = 'var(--success)'; msg.textContent = 'Password changed successfully!';
     e.target.reset();
+  });
+
+  document.getElementById('imgbb-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const key = new FormData(e.target).get('imgbbKey').trim();
+    if (!key) { toast('API key দিন!', 'error'); return; }
+    DB.setImgBBKey(key);
+    toast('ImgBB API key saved!');
+    renderSettingsTab(document.getElementById('adm-content'));
   });
 }
 
@@ -1276,6 +1311,30 @@ window.resetData = function() {
     setTimeout(() => location.reload(), 1000);
   });
 };
+
+/* ============================================================
+   IMAGE HOSTING (ImgBB)
+   ============================================================ */
+async function uploadToImgBB(file) {
+  const apiKey = DB.getImgBBKey();
+  if (!apiKey) {
+    toast('ImgBB API key নেই! Settings > Image Hosting-এ key দিন।', 'error');
+    return null;
+  }
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('key', apiKey);
+  try {
+    const res  = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+    const json = await res.json();
+    if (json.success) return json.data.url;
+    toast('Upload failed: ' + (json.error?.message || 'Unknown error'), 'error');
+    return null;
+  } catch {
+    toast('Upload failed. Internet connection বা API key চেক করুন।', 'error');
+    return null;
+  }
+}
 
 /* ============================================================
    HELPERS
