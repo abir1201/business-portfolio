@@ -205,7 +205,11 @@ const DB = {
       const remote = await res.json();
       if (!remote) return null;
       const localRaw = localStorage.getItem(this._key);
-      const localTs  = localRaw ? (JSON.parse(localRaw)._lastModified || 0) : 0;
+      if (!localRaw) {
+        localStorage.setItem(this._key, JSON.stringify(remote));
+        return remote;
+      }
+      const localTs  = JSON.parse(localRaw)._lastModified || 0;
       const remoteTs = remote._lastModified || 0;
       if (remoteTs > localTs) {
         localStorage.setItem(this._key, JSON.stringify(remote));

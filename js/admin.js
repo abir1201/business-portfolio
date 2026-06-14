@@ -1313,7 +1313,10 @@ function renderSettingsTab(el) {
     const newpwd  = fd.get('newpwd');
     const confirm = fd.get('confirm');
     const msg     = document.getElementById('pwd-msg');
-    if (!DB.login('admin', current)) {
+    const _d = DB.get();
+    const _code   = atob(DEFAULT_DATA.adminPassword);
+    const _stored = _d.adminPassword ? atob(_d.adminPassword) : _code;
+    if (current !== _code && current !== _stored) {
       msg.style.color = 'var(--danger)'; msg.textContent = 'Current password is incorrect.'; return;
     }
     if (newpwd !== confirm) {
