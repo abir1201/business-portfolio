@@ -406,23 +406,27 @@ window.openEduModal = function(id) {
 document.addEventListener('submit', e => {
   if (e.target.id !== 'edu-form') return;
   e.preventDefault();
-  const fd = new FormData(e.target);
-  const d  = DB.get();
-  const entry = {
-    id:          fd.get('id') || 'edu_' + Date.now(),
-    degree:      fd.get('degree'),
-    institution: fd.get('institution'),
-    location:    fd.get('location'),
-    duration:    fd.get('duration'),
-    grade:       fd.get('grade'),
-    description: fd.get('description')
-  };
-  const idx = d.education.findIndex(e => e.id === entry.id);
-  if (idx >= 0) d.education[idx] = entry; else d.education.push(entry);
-  DB.save(d);
-  closeModal('edu-modal');
-  toast('Education saved!');
-  renderEducationTab(document.getElementById('adm-content'));
+  try {
+    const fd = new FormData(e.target);
+    const d  = DB.get();
+    const entry = {
+      id:          fd.get('id') || 'edu_' + Date.now(),
+      degree:      fd.get('degree'),
+      institution: fd.get('institution'),
+      location:    fd.get('location'),
+      duration:    fd.get('duration'),
+      grade:       fd.get('grade'),
+      description: fd.get('description')
+    };
+    const idx = d.education.findIndex(x => x.id === entry.id);
+    if (idx >= 0) d.education[idx] = entry; else d.education.push(entry);
+    DB.save(d);
+    closeModal('edu-modal');
+    toast('Education saved!');
+    renderEducationTab(document.getElementById('adm-content'));
+  } catch(err) {
+    toast('Save failed: ' + err.message, 'error');
+  }
 });
 
 window.deleteEdu = function(id) {
@@ -547,15 +551,19 @@ window.openSkillModal = function(id) {
 document.addEventListener('submit', e => {
   if (e.target.id !== 'skill-form') return;
   e.preventDefault();
-  const fd = new FormData(e.target);
-  const d  = DB.get();
-  const entry = { id: fd.get('id') || 'sk_' + Date.now(), name: fd.get('name'), category: fd.get('category'), level: parseInt(fd.get('level')) };
-  const idx = d.skills.findIndex(s => s.id === entry.id);
-  if (idx >= 0) d.skills[idx] = entry; else d.skills.push(entry);
-  DB.save(d);
-  closeModal('skill-modal');
-  toast('Skill saved!');
-  renderSkillsTab(document.getElementById('adm-content'));
+  try {
+    const fd = new FormData(e.target);
+    const d  = DB.get();
+    const entry = { id: fd.get('id') || 'sk_' + Date.now(), name: fd.get('name'), category: fd.get('category'), level: parseInt(fd.get('level')) };
+    const idx = d.skills.findIndex(s => s.id === entry.id);
+    if (idx >= 0) d.skills[idx] = entry; else d.skills.push(entry);
+    DB.save(d);
+    closeModal('skill-modal');
+    toast('Skill saved!');
+    renderSkillsTab(document.getElementById('adm-content'));
+  } catch(err) {
+    toast('Save failed: ' + err.message, 'error');
+  }
 });
 
 window.deleteSkill = function(id) {
@@ -714,26 +722,30 @@ window.openProjModal = function(id) {
 document.addEventListener('submit', e => {
   if (e.target.id !== 'proj-form') return;
   e.preventDefault();
-  const fd  = new FormData(e.target);
-  const d   = DB.get();
-  const prev = document.getElementById('proj-img-preview');
-  const oldImg = fd.get('id') ? (d.projects.find(p => p.id === fd.get('id')) || {}).image || '' : '';
-  const entry = {
-    id:          fd.get('id') || 'proj_' + Date.now(),
-    title:       fd.get('title'),
-    category:    fd.get('category') || 'Other',
-    description: fd.get('description'),
-    demoUrl:     fd.get('demoUrl') || '#',
-    codeUrl:     fd.get('codeUrl') || '#',
-    tags:        fd.get('tags').split(',').map(t => t.trim()).filter(Boolean),
-    image:       prev.dataset.imgdata || oldImg
-  };
-  const idx = d.projects.findIndex(p => p.id === entry.id);
-  if (idx >= 0) d.projects[idx] = entry; else d.projects.push(entry);
-  DB.save(d);
-  closeModal('proj-modal');
-  toast('Project saved!');
-  renderProjectsTab(document.getElementById('adm-content'));
+  try {
+    const fd  = new FormData(e.target);
+    const d   = DB.get();
+    const prev = document.getElementById('proj-img-preview');
+    const oldImg = fd.get('id') ? (d.projects.find(p => p.id === fd.get('id')) || {}).image || '' : '';
+    const entry = {
+      id:          fd.get('id') || 'proj_' + Date.now(),
+      title:       fd.get('title'),
+      category:    fd.get('category') || 'Other',
+      description: fd.get('description'),
+      demoUrl:     fd.get('demoUrl') || '#',
+      codeUrl:     fd.get('codeUrl') || '#',
+      tags:        fd.get('tags').split(',').map(t => t.trim()).filter(Boolean),
+      image:       prev.dataset.imgdata || oldImg
+    };
+    const idx = d.projects.findIndex(p => p.id === entry.id);
+    if (idx >= 0) d.projects[idx] = entry; else d.projects.push(entry);
+    DB.save(d);
+    closeModal('proj-modal');
+    toast('Project saved!');
+    renderProjectsTab(document.getElementById('adm-content'));
+  } catch(err) {
+    toast('Save failed: ' + err.message, 'error');
+  }
 });
 
 window.deleteProj = function(id) {
@@ -946,21 +958,25 @@ window.openExpModal = function(type, id) {
 document.addEventListener('submit', e => {
   if (e.target.id !== 'exp-form') return;
   e.preventDefault();
-  const fd   = new FormData(e.target);
-  const type = fd.get('_type');
-  const isAch = type === 'ach';
-  const d    = DB.get();
-  const entry = { id: fd.get('id') || type + '_' + Date.now(), title: fd.get('title'), description: fd.get('description') };
-  if (isAch) entry.year = fd.get('duration');
-  else { entry.company = fd.get('company'); entry.duration = fd.get('duration'); }
-  const list = isAch ? d.achievements : d.experience;
-  const idx  = list.findIndex(x => x.id === entry.id);
-  if (idx >= 0) list[idx] = entry; else list.push(entry);
-  if (isAch) d.achievements = list; else d.experience = list;
-  DB.save(d);
-  closeModal('exp-modal');
-  toast('Saved!');
-  renderExperienceTab(document.getElementById('adm-content'));
+  try {
+    const fd   = new FormData(e.target);
+    const type = fd.get('_type');
+    const isAch = type === 'ach';
+    const d    = DB.get();
+    const entry = { id: fd.get('id') || type + '_' + Date.now(), title: fd.get('title'), description: fd.get('description') };
+    if (isAch) entry.year = fd.get('duration');
+    else { entry.company = fd.get('company'); entry.duration = fd.get('duration'); }
+    const list = isAch ? d.achievements : d.experience;
+    const idx  = list.findIndex(x => x.id === entry.id);
+    if (idx >= 0) list[idx] = entry; else list.push(entry);
+    if (isAch) d.achievements = list; else d.experience = list;
+    DB.save(d);
+    closeModal('exp-modal');
+    toast('Saved!');
+    renderExperienceTab(document.getElementById('adm-content'));
+  } catch(err) {
+    toast('Save failed: ' + err.message, 'error');
+  }
 });
 
 window.deleteExpItem = function(type, id) {
