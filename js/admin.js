@@ -339,6 +339,31 @@ function renderEducationTab(el) {
     </div>
     ${eduModal()}
   `;
+
+  document.getElementById('edu-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    try {
+      const fd = new FormData(e.target);
+      const d  = DB.get();
+      const entry = {
+        id:          fd.get('id') || 'edu_' + Date.now(),
+        degree:      fd.get('degree'),
+        institution: fd.get('institution'),
+        location:    fd.get('location'),
+        duration:    fd.get('duration'),
+        grade:       fd.get('grade'),
+        description: fd.get('description')
+      };
+      const idx = d.education.findIndex(x => x.id === entry.id);
+      if (idx >= 0) d.education[idx] = entry; else d.education.push(entry);
+      DB.save(d);
+      closeModal('edu-modal');
+      toast('Education saved!');
+      renderEducationTab(document.getElementById('adm-content'));
+    } catch(err) {
+      toast('Save failed: ' + err.message, 'error');
+    }
+  });
 }
 
 function eduModal() {
@@ -402,32 +427,6 @@ window.openEduModal = function(id) {
     form.elements['id'].value = '';
   }
 };
-
-document.addEventListener('submit', e => {
-  if (e.target.id !== 'edu-form') return;
-  e.preventDefault();
-  try {
-    const fd = new FormData(e.target);
-    const d  = DB.get();
-    const entry = {
-      id:          fd.get('id') || 'edu_' + Date.now(),
-      degree:      fd.get('degree'),
-      institution: fd.get('institution'),
-      location:    fd.get('location'),
-      duration:    fd.get('duration'),
-      grade:       fd.get('grade'),
-      description: fd.get('description')
-    };
-    const idx = d.education.findIndex(x => x.id === entry.id);
-    if (idx >= 0) d.education[idx] = entry; else d.education.push(entry);
-    DB.save(d);
-    closeModal('edu-modal');
-    toast('Education saved!');
-    renderEducationTab(document.getElementById('adm-content'));
-  } catch(err) {
-    toast('Save failed: ' + err.message, 'error');
-  }
-});
 
 window.deleteEdu = function(id) {
   confirm('Delete this education entry?', () => {
@@ -531,6 +530,23 @@ function renderSkillsTab(el) {
       </div>
     </div>
   `;
+
+  document.getElementById('skill-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    try {
+      const fd = new FormData(e.target);
+      const d  = DB.get();
+      const entry = { id: fd.get('id') || 'sk_' + Date.now(), name: fd.get('name'), category: fd.get('category'), level: parseInt(fd.get('level')) };
+      const idx = d.skills.findIndex(s => s.id === entry.id);
+      if (idx >= 0) d.skills[idx] = entry; else d.skills.push(entry);
+      DB.save(d);
+      closeModal('skill-modal');
+      toast('Skill saved!');
+      renderSkillsTab(document.getElementById('adm-content'));
+    } catch(err) {
+      toast('Save failed: ' + err.message, 'error');
+    }
+  });
 }
 
 window.openSkillModal = function(id) {
@@ -547,24 +563,6 @@ window.openSkillModal = function(id) {
     form.elements['id'].value = '';
   }
 };
-
-document.addEventListener('submit', e => {
-  if (e.target.id !== 'skill-form') return;
-  e.preventDefault();
-  try {
-    const fd = new FormData(e.target);
-    const d  = DB.get();
-    const entry = { id: fd.get('id') || 'sk_' + Date.now(), name: fd.get('name'), category: fd.get('category'), level: parseInt(fd.get('level')) };
-    const idx = d.skills.findIndex(s => s.id === entry.id);
-    if (idx >= 0) d.skills[idx] = entry; else d.skills.push(entry);
-    DB.save(d);
-    closeModal('skill-modal');
-    toast('Skill saved!');
-    renderSkillsTab(document.getElementById('adm-content'));
-  } catch(err) {
-    toast('Save failed: ' + err.message, 'error');
-  }
-});
 
 window.deleteSkill = function(id) {
   confirm('Delete this skill?', () => {
@@ -696,6 +694,34 @@ function renderProjectsTab(el) {
       prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
     }
   });
+
+  document.getElementById('proj-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    try {
+      const fd  = new FormData(e.target);
+      const d   = DB.get();
+      const prev = document.getElementById('proj-img-preview');
+      const oldImg = fd.get('id') ? (d.projects.find(p => p.id === fd.get('id')) || {}).image || '' : '';
+      const entry = {
+        id:          fd.get('id') || 'proj_' + Date.now(),
+        title:       fd.get('title'),
+        category:    fd.get('category') || 'Other',
+        description: fd.get('description'),
+        demoUrl:     fd.get('demoUrl') || '#',
+        codeUrl:     fd.get('codeUrl') || '#',
+        tags:        fd.get('tags').split(',').map(t => t.trim()).filter(Boolean),
+        image:       prev.dataset.imgdata || oldImg
+      };
+      const idx = d.projects.findIndex(p => p.id === entry.id);
+      if (idx >= 0) d.projects[idx] = entry; else d.projects.push(entry);
+      DB.save(d);
+      closeModal('proj-modal');
+      toast('Project saved!');
+      renderProjectsTab(document.getElementById('adm-content'));
+    } catch(err) {
+      toast('Save failed: ' + err.message, 'error');
+    }
+  });
 }
 
 window.openProjModal = function(id) {
@@ -718,35 +744,6 @@ window.openProjModal = function(id) {
     form.elements['id'].value = '';
   }
 };
-
-document.addEventListener('submit', e => {
-  if (e.target.id !== 'proj-form') return;
-  e.preventDefault();
-  try {
-    const fd  = new FormData(e.target);
-    const d   = DB.get();
-    const prev = document.getElementById('proj-img-preview');
-    const oldImg = fd.get('id') ? (d.projects.find(p => p.id === fd.get('id')) || {}).image || '' : '';
-    const entry = {
-      id:          fd.get('id') || 'proj_' + Date.now(),
-      title:       fd.get('title'),
-      category:    fd.get('category') || 'Other',
-      description: fd.get('description'),
-      demoUrl:     fd.get('demoUrl') || '#',
-      codeUrl:     fd.get('codeUrl') || '#',
-      tags:        fd.get('tags').split(',').map(t => t.trim()).filter(Boolean),
-      image:       prev.dataset.imgdata || oldImg
-    };
-    const idx = d.projects.findIndex(p => p.id === entry.id);
-    if (idx >= 0) d.projects[idx] = entry; else d.projects.push(entry);
-    DB.save(d);
-    closeModal('proj-modal');
-    toast('Project saved!');
-    renderProjectsTab(document.getElementById('adm-content'));
-  } catch(err) {
-    toast('Save failed: ' + err.message, 'error');
-  }
-});
 
 window.deleteProj = function(id) {
   confirm('Delete this project?', () => {
@@ -934,6 +931,29 @@ function renderExperienceTab(el) {
       </div>
     </div>
   `;
+
+  document.getElementById('exp-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    try {
+      const fd   = new FormData(e.target);
+      const type = fd.get('_type');
+      const isAch = type === 'ach';
+      const d    = DB.get();
+      const entry = { id: fd.get('id') || type + '_' + Date.now(), title: fd.get('title'), description: fd.get('description') };
+      if (isAch) entry.year = fd.get('duration');
+      else { entry.company = fd.get('company'); entry.duration = fd.get('duration'); }
+      const list = isAch ? d.achievements : d.experience;
+      const idx  = list.findIndex(x => x.id === entry.id);
+      if (idx >= 0) list[idx] = entry; else list.push(entry);
+      if (isAch) d.achievements = list; else d.experience = list;
+      DB.save(d);
+      closeModal('exp-modal');
+      toast('Saved!');
+      renderExperienceTab(document.getElementById('adm-content'));
+    } catch(err) {
+      toast('Save failed: ' + err.message, 'error');
+    }
+  });
 }
 
 window.openExpModal = function(type, id) {
@@ -954,30 +974,6 @@ window.openExpModal = function(type, id) {
     form.elements['id'].value = '';
   }
 };
-
-document.addEventListener('submit', e => {
-  if (e.target.id !== 'exp-form') return;
-  e.preventDefault();
-  try {
-    const fd   = new FormData(e.target);
-    const type = fd.get('_type');
-    const isAch = type === 'ach';
-    const d    = DB.get();
-    const entry = { id: fd.get('id') || type + '_' + Date.now(), title: fd.get('title'), description: fd.get('description') };
-    if (isAch) entry.year = fd.get('duration');
-    else { entry.company = fd.get('company'); entry.duration = fd.get('duration'); }
-    const list = isAch ? d.achievements : d.experience;
-    const idx  = list.findIndex(x => x.id === entry.id);
-    if (idx >= 0) list[idx] = entry; else list.push(entry);
-    if (isAch) d.achievements = list; else d.experience = list;
-    DB.save(d);
-    closeModal('exp-modal');
-    toast('Saved!');
-    renderExperienceTab(document.getElementById('adm-content'));
-  } catch(err) {
-    toast('Save failed: ' + err.message, 'error');
-  }
-});
 
 window.deleteExpItem = function(type, id) {
   confirm('Delete this entry?', () => {
