@@ -202,8 +202,16 @@ const DB = {
     try {
       const res = await fetch(this._fbUrl);
       if (!res.ok) return null;
-      const data = await res.json();
-      if (data) { localStorage.setItem(this._key, JSON.stringify(data)); return data; }
+      const remote = await res.json();
+      if (!remote) return null;
+      const localRaw = localStorage.getItem(this._key);
+      const localTs  = localRaw ? (JSON.parse(localRaw)._lastModified || 0) : 0;
+      const remoteTs = remote._lastModified || 0;
+      if (remoteTs > localTs) {
+        localStorage.setItem(this._key, JSON.stringify(remote));
+        return remote;
+      }
+      return null;
     } catch {}
     return null;
   },
@@ -219,6 +227,7 @@ const DB = {
   },
 
   save(data) {
+    data._lastModified = Date.now();
     localStorage.setItem(this._key, JSON.stringify(data));
     this.pushRemote(data);
   }
